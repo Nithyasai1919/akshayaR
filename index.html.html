@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dear Mine💜</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+        }
+
+        .page {
+            display: none;
+            width: 100%;
+            max-width: 800px;
+            padding: 20px;
+            animation: fadeIn 0.8s ease;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Page 1 - Unlock */
+        .unlock-container {
+            text-align: center;
+            background: white;
+            padding: 60px 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .unlock-container h1 {
+            color: #764ba2;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            font-weight: normal;
+        }
+
+        .heart-icon {
+            font-size: 80px;
+            margin-bottom: 30px;
+            animation: heartbeat 1.5s infinite;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .unlock-input {
+            padding: 15px 25px;
+            font-size: 18px;
+            border: 2px solid #764ba2;
+            border-radius: 30px;
+            width: 100%;
+            max-width: 300px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .unlock-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 50px;
+            font-size: 18px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .unlock-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .error-msg {
+            color: #e74c3c;
+            margin-top: 15px;
+            font-size: 14px;
+            display: none;
+        }
+
+        /* Page 2 - Voice Message */
+        .voice-container {
+            text-align: center;
+            background: white;
+            padding: 60px 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .voice-container h2 {
+            color: #764ba2;
+            font-size: 2em;
+            margin-bottom: 40px;
+        }
+
+        .play-button {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: white;
+            font-size: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 10px 30px rgba(118, 75, 162, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+        }
+
+        .play-button:hover {
+            transform: scale(1.1);
+        }
+
+        .play-button.playing {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 10px 30px rgba(118, 75, 162, 0.4); }
+            50% { box-shadow: 0 10px 50px rgba(118, 75, 162, 0.8); }
+        }
+
+        /* Page 3 - Flip Cards */
+        .reasons-container {
+            text-align: center;
+        }
+
+        .reasons-container h2 {
+            color: white;
+            font-size: 2.5em;
+            margin-bottom: 40px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .flip-card {
+            height: 200px;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+
+        .flip-card.flipped .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .flip-card-front {
+            background: white;
+            font-size: 1.5em;
+            color: #764ba2;
+            font-weight: bold;
+        }
+
+        .flip-card-back {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            transform: rotateY(180deg);
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+
+        .next-btn {
+            background: white;
+            color: #764ba2;
+            border: none;
+            padding: 15px 40px;
+            font-size: 16px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-style: italic;
+            transition: all 0.3s;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+
+        .next-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        }
+
+        /* Page 4 - Quiz */
+        .quiz-container {
+            background: white;
+            padding: 50px 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .quiz-container h2 {
+            color: #764ba2;
+            font-size: 2em;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .question {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .question.active {
+            display: block;
+        }
+
+        .question h3 {
+            color: #333;
+            margin-bottom: 25px;
+            font-size: 1.3em;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .option {
+            padding: 15px 25px;
+            background: #f8f9fa;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 16px;
+        }
+
+        .option:hover {
+            background: #f0f0f0;
+            border-color: #764ba2;
+        }
+
+        .option.correct {
+            background: #d4edda;
+            border-color: #28a745;
+        }
+
+        .option.wrong {
+            background: #f8d7da;
+            border-color: #dc3545;
+        }
+
+        .quiz-score {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 1.2em;
+            color: #764ba2;
+            font-weight: bold;
+        }
+
+        .quiz-next-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 35px;
+            font-size: 16px;
+            border-radius: 25px;
+            cursor: pointer;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .quiz-next-btn:hover {
+            opacity: 0.9;
+        }
+
+        /* Page 5 - Photo Gallery */
+        .gallery-container {
+            text-align: center;
+        }
+
+        .gallery-container h2 {
+            color: white;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .gallery-subtitle {
+            color: white;
+            font-size: 1.3em;
+            margin-bottom: 40px;
+            font-style: italic;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+        }
+
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+        }
+
+        .photo-card {
+            background: white;
+            border-radius: 15px;
+            padding: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s;
+        }
+
+        .photo-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .photo-placeholder {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 50px;
+            margin-bottom: 15px;
+        }
+
+        .photo-message {
+            color: #333;
+            font-size: 0.95em;
+            line-height: 1.5;
+            font-style: italic;
+        }
+
+        .final-message {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .final-message h3 {
+            color: #764ba2;
+            font-size: 1.8em;
+            margin-bottom: 15px;
+        }
+
+        .final-message p {
+            color: #555;
+            font-size: 1.1em;
+            line-height: 1.8;
+        }
+
+        /* Audio Controls */
+        .audio-control {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: white;
+            border-radius: 50px;
+            padding: 15px 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            cursor: pointer;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            color: #764ba2;
+        }
+
+        .audio-icon {
+            font-size: 20px;
+        }
+
+        @media (max-width: 600px) {
+            .unlock-container h1 {
+                font-size: 1.8em;
+            }
+            
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .photo-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Page 1: Unlock -->
+    <div id="page1" class="page active">
+        <div class="unlock-container">
+            <div class="heart-icon">💜</div>
+            <h1>Dear Thangookutty 💜</h1>
+            <p style="color: #666; margin-bottom: 30px; font-size: 1.1em;">Enter your bday date</p>
+            <p style="color: #666; margin-bottom: 30px; font-size: 1.1em;">Before that press music button</p>
+            <input type="text" id="unlockDate" class="unlock-input" placeholder="DD/MM/YYYY">
+            <br>
+            <button onclick="checkDate()" class="unlock-btn">Explore my world</button>
+            <p id="errorMsg" class="error-msg"> Dai correct date ha podu 💔</p>
+        </div>
+    </div>
+
+    <!-- Page 2: Reasons to Love -->
+    <div id="page2" class="page">
+        <div class="reasons-container">
+            <h2>Reasons Why I fall for you</h2>
+            <p style="color: white; margin-bottom: 40px; font-size: 1.2em;">Tap each card to see what I feel...</p>
+            
+            <div class="cards-grid">
+                <div class="flip-card" onclick="flipCard(this)">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front"> Your eye contact 😊</div>
+                        <div class="flip-card-back">I love the way you look at me even from distance you noitice Everything of me...ne ene epayum antha mathuri eh pakanum when you felling shy u really look cuteee 🥰💞</div>
+                    </div>
+                </div>
+
+                <div class="flip-card" onclick="flipCard(this)">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">Your Pasam 💝</div>
+                        <div class="flip-card-back">you always check on me 🥰💞ne epayum yen keta pasam ha pesa modhu I always feels save I feel like finally I have someone for me I can run to u whenever I feel lonely ur the one who made me to feel it... 🛡️🌸</div>
+                    </div>
+                </div>
+
+                <div class="flip-card" onclick="flipCard(this)">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">Dai Rishi ur vibe 😄</div>
+                        <div class="flip-card-back">Dai un vibe another level of comfort un kuda romantic ha irukuradhu vida vibe ha iruka tha pudikum adhuvum the way you toast me adhu eh oru fun we metch our both vibe😉🤭💖 </div>
+                    </div>
+                </div>
+
+                <div class="flip-card" onclick="flipCard(this)">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">Your understanding🤝</div>
+                        <div class="flip-card-back">I dont want to over explain many thing to u na solura dhu ku mundai eh u under stand my emotions ana ena unaku atha vela eapdi express panadra dhu nu tha thariayala🥺💖🌟</div>
+                    </div>
+                </div>
+
+                <div class="flip-card" onclick="flipCard(this)">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">Your touch 💫</div>
+                        <div class="flip-card-back">I still remember the first time you held my hand namba first kiss eee dai i am really craving for ur touch aprom You always love it when I hold your cheeks that day i never forget in my life and i will never regret it.. ❤️</div>
+                    </div>
+                </div>
+
+                <div class="flip-card" onclick="flipCard(this)">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">Your support 💖</div>
+                        <div class="flip-card-back">un support ila idk wether i could make this far Thank you for me being by my side un happyness la unakda irukuradhu vida un lowest la un kuda eh irukanum na irupan unkaga epayum unkuda irupan pls da epayum yen kuda eh iru I love you ❤️</div>
+                    </div>
+                </div>
+            </div>
+
+            <button onclick="goToPage('page3')" class="next-btn">Still need to explore my world...? 💕</button>
+        </div>
+    </div>
+
+    <!-- Page 3: Quiz -->
+    <div id="page3" class="page">
+        <div class="quiz-container">
+            <h2>Lets see en pathi evalo therinji vachi iruak nu? 💭</h2>
+            
+            <div id="question1" class="question active">
+                <h3>1. What is my favorite nickname that you call me?</h3>
+                <div class="options">
+                    <div class="option" onclick="selectAnswer(this, 'Thakali', 1)">Thakali</div>
+                    <div class="option" onclick="selectAnswer(this, 'Gundu athi', 1)">Gundu athi</div>
+                    <div class="option" onclick="selectAnswer(this, 'Mi,Ma', 1)">Mi,Ma</div>
+                    <div class="option" onclick="selectAnswer(this, 'Papa', 1)">Papa</div>
+                    <div class="option" onclick="selectAnswer(this, 'All of the above', 1)">All of the above</div>
+                </div>
+                <button class="quiz-next-btn" onclick="nextQuestion(2)">Next Question</button>
+            </div>
+
+            <div id="question2" class="question">
+                <h3>2. What is my favorite way to receive love from you?</h3>
+                <div class="options">
+                    <div class="option" onclick="selectAnswer(this, 'Long hugs 🤗', 2)">Long hugs 🤗</div>
+                    <div class="option" onclick="selectAnswer(this, 'morng calls / night calls / quality time with u💬', 2)">morng calls / night calls / quality time with u💬</div>
+                    <div class="option" onclick="selectAnswer(this, 'going on a date 🥰', 2)">going on a date 🥰</div>
+                    <div class="option" onclick="selectAnswer(this, 'All of the above ❤️', 2)">All of the above ❤️</div>
+                </div>
+                <button class="quiz-next-btn" onclick="nextQuestion(3)">Next Question</button>
+            </div>
+
+            <div id="question3" class="question">
+                <h3>3.What is my biggest dream for our future? </h3>
+                <div class="options">
+                    <div class="option" onclick="selectAnswer(this, 'Traveling together ✈️', 3)">Traveling together ✈️</div>
+                    <div class="option" onclick="selectAnswer(this, 'Growing old together 👵👴', 3)">Growing old together 👵👴</div>
+                    <div class="option" onclick="selectAnswer(this, 'Building a happy home 🏡', 3)">Building a happy home 🏡</div>
+                    <div class="option" onclick="selectAnswer(this, 'All of these with you ❤️', 3)">All of these with you ❤️</div>
+                </div>
+                <button class="quiz-next-btn" onclick="nextQuestion(4)">Next Question</button>
+            </div>
+
+            <div id="question4" class="question">
+                <h3>4. What is the one thing that i dont like to do with u?</h3>
+                <div class="options">
+                    <div class="option" onclick="selectAnswer(this, 'Sanda', 4)">Sanda</div>
+                    <div class="option" onclick="selectAnswer(this, 'Your scolding', 4)">Your scolding</div>
+                    <div class="option" onclick="selectAnswer(this, 'Your Idiot things', 4)">Your Idiot things</div>
+                    <div class="option" onclick="selectAnswer(this, 'Do Nothing..', 4)">Do Nothing..</div>
+                </div>
+                <button class="quiz-next-btn" onclick="nextQuestion(5)">Next Question</button>
+            </div>
+
+            <div id="question5" class="question">
+                <h3>5. What kind of date makes me happiest?</h3>
+                <div class="options">
+                    <div class="option" onclick="selectAnswer(this, 'Movie night at home 🎬', 5)">Movie night at home 🎬</div>
+                    <div class="option" onclick="selectAnswer(this, 'Long walk & deep talks 🌙', 5)">Long walk & deep talks 🌙</div>
+                    <div class="option" onclick="selectAnswer(this, 'Temple and Church date', 5)">Temple and Church date</div>
+                    <div class="option" onclick="selectAnswer(this, 'Anywhere as long as it’s with you 💖', 5)">Anywhere as long as it’s with you 💖</div>
+                </div>
+                <button class="quiz-next-btn" onclick="showResults()">See Results</button>
+            </div>
+
+            <div id="quizResults" style="display: none; text-align: center;">
+                <h3 style="color: #764ba2; font-size: 2em; margin-bottom: 20px;">Quiz Complete! 🎉</h3>
+                <div class="quiz-score" id="scoreDisplay"></div>
+                <p style="margin: 20px 0; color: #666; font-size: 1.1em;">No matter the score,Any way you know my heart ❤️</p>
+                <button onclick="goToPage('page5')" class="unlock-btn">Can We Our Memories Together</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page 4: Photo Gallery -->
+    <div id="page4" class="page">
+        <div class="gallery-container">
+            <h2>Our Beautiful Moments</h2>
+            <p class="gallery-subtitle">We need to be happy like this forever... 💑</p>
+            
+            <div class="photo-grid">
+                <div class="photo-card">
+                    <img src="img1.jpg.jpeg" alt="Our Memory" style="width: 100%; height: 200px; object-fit: cover; border-radius: 10px; margin-bottom: 15px;">
+                    <p class="photo-message">"Every moment with you is a treasure I hold close to my heart."</p>
+                </div>
+
+                <div class="photo-card">
+                    <img src="img2.jpg.jpeg" alt="Our Memory" style="width: 100%; height: 200px; object-fit: cover; border-radius: 10px; margin-bottom: 15px;">
+                    <p class="photo-message">"Your smile in this moment reminds me why I fall for you every single day."</p>
+                </div>
+
+                <div class="photo-card">
+                    <img src="img3.jpg.jpeg" alt="Our Memory" style="width: 100%; height: 200px; object-fit: cover; border-radius: 10px; margin-bottom: 15px;">
+                    <p class="photo-message">"Together, we create memories that will last a lifetime."</p>
+                </div>
+
+                <div class="photo-card">
+                    <img src="img4.jpg.jpeg" alt="Our Memory" style="width: 100%; height: 200px; object-fit: cover; border-radius: 10px; margin-bottom: 15px;">
+                    <p class="photo-message">"This happiness we share is what I want for us forever."</p>
+                </div>
+
+                <div class="photo-card">
+                    <img src="img5.jpg.jpeg" alt="Our Memory" style="width: 100%; height: 200px; object-fit: cover; border-radius: 10px; margin-bottom: 15px;">
+                    <p class="photo-message">"In your eyes, I see our future filled with love and laughter."</p>
+                </div>
+
+                <div class="photo-card">
+                    <img src="img6.jpg.jpeg" alt="Our Memory" style="width: 100%; height: 200px; object-fit: cover; border-radius: 10px; margin-bottom: 15px;">
+                    <p class="photo-message">"Forever grateful for every second we spend together."</p>
+                </div>
+            </div>
+
+            <div class="final-message">
+                <h3>My Pannikutty</h3>
+                <p>Dai Rishi Crispin thank you so much ne yen life la vaintha dhu ku unakuda nariya travel panum kaistom r happy want to face everthing with you na una hurt pani iruintha sorry da sila edadhula una na understand pana iruinthu irukan adhuku la sorry aprom vara ena solura dhu nu thariyala be happy avalo tha seri tata sikaram va Tuta.</p>
+                <p>இப்படிக்கு உணவள்(Ippadikku unnaval) ❤️</p>
+                
+            </div>
+        </div>
+    </div>
+
+     <!-- Page 5: Voice Message -->
+    <div id="page5" class="page">
+        <div class="voice-container">
+            <h2>I Have Something Special to Tell BABEEE....</h2>
+            <p style="color: #666; margin-bottom: 40px; font-size: 1.1em;">Click to hear my message ❤️</p>
+            <button id="playBtn" class="play-button" onclick="playVoiceMessage()">▶</button>
+            <p style="margin-top: 30px; color: #999; font-size: 0.9em;">Press play when you're ready</p>
+            <button onclick="goToPage('page6')" class="unlock-btn" style="margin-top:30px;">
+Next ❤️
+</button>
+            <audio id="voiceMessage" style="display: none;">
+                <!-- You'll need to upload your voice recording and replace the src -->
+                <source src="audio.mp3.mpeg" type="audio/mpeg">
+            </audio>
+        </div>
+    </div>
+    <!-- Page 6: Videos -->
+<div id="page6" class="page">
+    <div class="gallery-container">
+        <h2>Our Cute Video Memories 🎥</h2>
+        <p class="gallery-subtitle">Moments I want to watch forever...</p>
+
+        <div class="photo-grid">
+
+            <div class="photo-card">
+                <video width="100%" height="200" controls onclick="restartVideo(this)">
+                    <source src="video1.mp4.mp4" type="video/mp4">
+                </video>
+            </div>
+
+            <div class="photo-card">
+                <video width="100%" height="200" controls onclick="restartVideo(this)">
+                    <source src="video2.mp4.mp4" type="video/mp4">
+                </video>
+            </div>
+
+            <div class="photo-card">
+                <video width="100%" height="200" controls onclick="restartVideo(this)">
+                    <source src="video3.mp4.mp4" type="video/mp4">
+                </video>
+            </div>
+
+            <div class="photo-card">
+                <video width="100%" height="200" controls onclick="restartVideo(this)">
+                    <source src="video4.mp4.mp4" type="video/mp4">
+                </video>
+            </div>
+
+        </div>
+
+        <button onclick="goToPage('page4')" class="next-btn" style="margin-top:40px;">
+            Next → Our Photos ❤️
+        </button>
+
+    </div>
+</div>
+
+    <!-- Background Music Control -->
+    <div class="audio-control" onclick="toggleBackgroundMusic()">
+        <span class="audio-icon" id="musicIcon">🎵</span>
+        <span id="musicText">Music On</span>
+    </div>
+
+    <audio id="backgroundMusic" loop>
+        <source src="background.mp3.mpeg" type="audio/mpeg">
+    </audio>
+
+    <script>
+        let currentPage = 1;
+        let quizScore = 0;
+        let backgroundMusic = document.getElementById('backgroundMusic');
+        let isMusicPlaying = false;
+
+        // Set your correct answers here
+        const correctAnswers = {
+            1: 'All of the above',      // Change to correct answer
+            2: 'All of the above ❤️',     // Change to correct answer
+            3: 'All of these with you ❤️',   // Change to correct answer
+            4: 'Sanda',     // Change to correct answer
+            5: 'Anywhere as long as it’s with you 💖' // Change to correct answer
+        };
+
+        // Set your special date here (format: DD/MM/YYYY)
+        const specialDate = '25/10/2003'; // Change this to your actual date
+
+        function checkDate() {
+            const input = document.getElementById('unlockDate').value;
+            const errorMsg = document.getElementById('errorMsg');
+            
+            if (input === specialDate) {
+                goToPage('page2');
+                startBackgroundMusic();
+            } else {
+                errorMsg.style.display = 'block';
+                setTimeout(() => {
+                    errorMsg.style.display = 'none';
+                }, 3000);
+            }
+        }
+
+        function playVoiceMessage() {
+            const audio = document.getElementById('voiceMessage');
+            const playBtn = document.getElementById('playBtn');
+            
+            // Pause background music
+            backgroundMusic.pause();
+            
+            playBtn.classList.add('playing');
+            playBtn.innerHTML = '⏸';
+            
+            audio.play();
+            
+            audio.onended = function() {
+                playBtn.classList.remove('playing');
+                playBtn.innerHTML = '✓';
+                setTimeout(() => {
+                    goToPage('page3');
+                    backgroundMusic.play();
+                }, 1500);
+            };
+        }
+
+        function flipCard(card) {
+            card.classList.toggle('flipped');
+        }
+
+        function selectAnswer(element, answer, questionNum) {
+            const options = element.parentElement.querySelectorAll('.option');
+            options.forEach(opt => {
+                opt.style.pointerEvents = 'none';
+            });
+
+            if (answer === correctAnswers[questionNum]) {
+                element.classList.add('correct');
+                quizScore++;
+            } else {
+                element.classList.add('wrong');
+                // Show correct answer
+                options.forEach(opt => {
+                    if (opt.textContent === correctAnswers[questionNum]) {
+                        opt.classList.add('correct');
+                    }
+                });
+            }
+
+            element.parentElement.nextElementSibling.style.display = 'block';
+        }
+
+        function nextQuestion(nextNum) {
+            document.querySelector('.question.active').classList.remove('active');
+            document.getElementById('question' + nextNum).classList.add('active');
+        }
+
+        function showResults() {
+            document.querySelector('.question.active').style.display = 'none';
+            document.getElementById('quizResults').style.display = 'block';
+            document.getElementById('scoreDisplay').textContent = `You scored ${quizScore} out of 5! `;
+            
+            if (quizScore === 5) {
+                document.getElementById('scoreDisplay').textContent += '🌟 Perfect! You know me so well!';
+            } else if (quizScore >= 3) {
+                document.getElementById('scoreDisplay').textContent += '❤️ Great job! You know me well!';
+            } else {
+                document.getElementById('scoreDisplay').textContent += '💕 We have more to learn about each other!';
+            }
+        }
+
+        function goToPage(pageId) {
+            document.querySelector('.page.active').classList.remove('active');
+            document.getElementById(pageId).classList.add('active');
+        }
+
+        function startBackgroundMusic() {
+            if (!isMusicPlaying) {
+                backgroundMusic.play().catch(e => {
+                    console.log('Autoplay prevented. User interaction required.');
+                });
+                isMusicPlaying = true;
+            }
+        }
+
+        function toggleBackgroundMusic() {
+            const musicIcon = document.getElementById('musicIcon');
+            const musicText = document.getElementById('musicText');
+            
+            if (isMusicPlaying) {
+                backgroundMusic.pause();
+                musicIcon.textContent = '🔇';
+                musicText.textContent = 'Music Off';
+                isMusicPlaying = false;
+            } else {
+                backgroundMusic.play();
+                musicIcon.textContent = '🎵';
+                musicText.textContent = 'Music On';
+                isMusicPlaying = true;
+            }
+        }
+
+        // Allow Enter key on unlock page
+        document.getElementById('unlockDate').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkDate();
+            }
+        });
+        function restartVideo(video) {
+    video.currentTime = 0;
+    video.play();
+    }
+    </script>
+</body>
+</html>
